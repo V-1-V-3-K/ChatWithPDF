@@ -1,4 +1,5 @@
 from flask import Flask
+from file_reader.url import PDFReader as urlPdfReader
 
 app = Flask(__name__)
 

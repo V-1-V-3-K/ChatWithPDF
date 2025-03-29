@@ -1,0 +1,22 @@
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore environment folders
+venv/
+.env
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore specific folders
+node_modules/
+dist/
+
+# Ignore downloaded pdf file
+.pdf
