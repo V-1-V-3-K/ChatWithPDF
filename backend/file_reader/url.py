@@ -66,14 +66,18 @@ class PDFReader:
             print(f"An error occurred: {e}")
     
     def get_pdf_data(self):
+        ## return full pdf data
         return self.pdf_data
-        
 
-url = 'https://pdfobject.com/pdf/sample.pdf'
-pdf = PDFReader(url = url)
-pdf.download_pdf()
-print(pdf.get_num_pages())
-print(pdf.get_page_data(1))
-print(pdf.get_pdf_data())
-pdf.get_page_data(2)
+
+
+## test code
+## uncomment the below lines and run python .\url.py to check if code is working properly
+# url = 'https://pdfobject.com/pdf/sample.pdf'
+# pdf = PDFReader(url = url)
+# pdf.download_pdf()
+# print(pdf.get_num_pages())
+# print(pdf.get_page_data(1))
+# print(pdf.get_pdf_data())
+# pdf.get_page_data(2)
 
