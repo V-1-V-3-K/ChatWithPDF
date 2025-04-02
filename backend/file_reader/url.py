@@ -1,3 +1,4 @@
+import os
 import requests
 import fitz
 
@@ -7,16 +8,24 @@ class PDFReader:
         self.pdf_data = []
         self.pdf_reader = None
         self.page_number = None
-        self.pdf_path = None
+        
+        # Get the absolute path of the "Backend/pdfs" directory
+        backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Moves up to "Backend"
+        self.pdf_dir = os.path.join(backend_dir, "pdfs")  # Target "pdfs" inside "Backend"
+        self.pdf_path = os.path.join(self.pdf_dir, "downloaded_file.pdf")
+
     def download_pdf(self):
         try:
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(self.pdf_path), exist_ok=True)
+
             # Send a GET request to the URL
             response = requests.get(self.url)
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Save the PDF file
-                self.pdf_path = "downloaded_file.pdf"
+                
                 with open(self.pdf_path, "wb") as file:
                     file.write(response.content)
                 print("PDF downloaded successfully!")
