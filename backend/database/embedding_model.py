@@ -1,23 +1,26 @@
+from vector_database import VectorDB
 
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
 
+
 class EmbeddingModel:
     def __init__(self, model_tag = "sentence-transformers/all-MiniLM-L6-v2"):
         self.model_tag  = model_tag
         self.model = SentenceTransformer(model_tag)
-        self.embeddings = []
-        self.df = pd.DataFrame()
+        self.vectorDb = VectorDB()
         
 
     def encode(self, sentences):
         try:
-            self.df['sentence'] = sentences
+            embeddings = []
+            self.vectorDb.store_sentences(sentences)
             for sentence in sentences:
-                self.embeddings.append(self.model.encode(sentence))
-            self.embeddings = np.array(self.embeddings)
+                embeddings.append(self.model.encode(sentence))
+            embeddings = np.array(embeddings)
+            self.vectorDb.store_embeddings(embeddings)
             # print(f"Encoded {len(sentences)} sentences. Shape: {self.embeddings.shape}, single embedding shape: {self.embeddings[0].shape}")
         except Exception as e:
             print(f'Error occured while encoding: {e}')
@@ -27,14 +30,8 @@ class EmbeddingModel:
             user_input_em = np.array(self.model.encode(user_input))
             # print(f'User embedding shape:{user_input_em.shape}')
 
-            # Compute cosine similarities between user input and each sentence embedding
-            cosine_similarities = cosine_similarity(user_input_em.reshape(1,-1), self.embeddings)
-
-            # Update DataFrame with the cosine similarity values
-            self.df['cosine_similarity'] = cosine_similarities.flatten()  # Flatten to match the number of sentences
-            # print(self.df)
-            self.df = self.df.sort_values(by=['cosine_similarity'], ascending=False)
-            print(f'Your Search Result: {self.df['sentence'].iloc[0]}')
+            result = self.vectorDb.search_closest_sentence(user_input_em)
+            print(f'Your Search Result: {result}')
         except Exception as e:
             print(f'Error occured while searching result: {e}')
 
