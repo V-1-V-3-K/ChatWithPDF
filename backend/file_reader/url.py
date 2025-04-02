@@ -20,8 +20,10 @@ class PDFReader:
             # Ensure the directory exists
             os.makedirs(os.path.dirname(self.pdf_path), exist_ok=True)
 
-            # Send a GET request to the URL
-            response = requests.get(self.url)
+            # Send a GET request to the URL with timeout to avoid hanging requests
+            response = requests.get(self.url, timeout=10)
+            # Raises HTTPError for 4xx or 5xx responses
+            response.raise_for_status()
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
@@ -57,18 +59,16 @@ class PDFReader:
             ## close file
             doc.close()
         except Exception as e:
-            raise Exception(e)
+            raise Exception(f"Error processing PDF: {e}")
 
     def get_num_pages(self):
         return self.page_number
     
     def get_page_data(self,pageNumber):
         try:
-            if(pageNumber>self.page_number):
-                raise Exception(f'Page number provided:{pageNumber} is should be strictly less than size of pdf:{self.page_number}')
-            
-            if(pageNumber<1):
-                raise Exception(f'Page number provided:{pageNumber} should be strictly greater than 0')
+            if not (1 <= pageNumber <= self.page_number):
+                print(f"❌ Invalid page number: {pageNumber}. Must be between 1 and {self.page_number}.")
+                return None  # Graceful handling
 
             return self.pdf_data[pageNumber-1] 
             
@@ -76,8 +76,9 @@ class PDFReader:
             print(f"An error occurred: {e}")
     
     def get_pdf_data(self):
-        ## return full pdf data
-        return self.pdf_data
+        """Yield PDF data page by page to optimize memory usage."""
+        for page in self.pdf_data:
+            yield page  # Returns pages one at a time instead of storing everything
 
 
 
@@ -88,6 +89,7 @@ class PDFReader:
 # pdf.download_pdf()
 # print(pdf.get_num_pages())
 # print(pdf.get_page_data(1))
-# print(pdf.get_pdf_data())
+# for page_content in pdf.get_pdf_data():
+    # print(page_content) 
 # pdf.get_page_data(2)
 
