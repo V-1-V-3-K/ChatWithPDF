@@ -21,9 +21,10 @@ This file contains details related to backend
     - add `<dependency_name>==<version>` in requirement.txt
 
 
-## Note:
+## Note Self:
 1. Url.py file is completed.. will add logger at later stage
 
 2. Added basic code for repo.py.. will complete later  
 
-Happy Coding 😊
+-----------------------------------------------------
+# <p align="Center">Happy Coding 😊</p>
