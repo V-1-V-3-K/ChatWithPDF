@@ -12,13 +12,12 @@ class PDFReader:
         # Get the absolute path of the "Backend/pdfs" directory
         backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Moves up to "Backend"
         self.pdf_dir = os.path.join(backend_dir, "pdfs")  # Target "pdfs" inside "Backend"
-        self.pdf_path = os.path.join(self.pdf_dir, "downloaded_file.pdf")
+        self.pdf_path = os.path.join(self.pdf_dir, "url_downloaded_file.pdf")
+        # Ensure the directory exists
         os.makedirs(self.pdf_dir, exist_ok=True)
 
     def download_pdf(self):
         try:
-            # Ensure the directory exists
-            os.makedirs(os.path.dirname(self.pdf_path), exist_ok=True)
 
             # Send a GET request to the URL with timeout to avoid hanging requests
             response = requests.get(self.url, timeout=10)
@@ -40,7 +39,7 @@ class PDFReader:
                 raise Exception(f"Failed to download PDF. Status code: {response.status_code}")
 
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error Downloading PDF: {e}")
     
     def __process_pdf(self):
         try:
@@ -67,8 +66,7 @@ class PDFReader:
     def get_page_data(self,pageNumber):
         try:
             if not (1 <= pageNumber <= self.page_number):
-                print(f"❌ Invalid page number: {pageNumber}. Must be between 1 and {self.page_number}.")
-                return None  # Graceful handling
+                raise Exception(f"❌ Invalid page number: {pageNumber}. Must be between 1 and {self.page_number}.")
 
             return self.pdf_data[pageNumber-1] 
             
