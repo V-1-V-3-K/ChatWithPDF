@@ -13,6 +13,7 @@ class PDFReader:
         backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Moves up to "Backend"
         self.pdf_dir = os.path.join(backend_dir, "pdfs")  # Target "pdfs" inside "Backend"
         self.pdf_path = os.path.join(self.pdf_dir, "downloaded_file.pdf")
+        os.makedirs(self.pdf_dir, exist_ok=True)
 
     def download_pdf(self):
         try:
